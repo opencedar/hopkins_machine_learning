@@ -181,6 +181,8 @@ p + geom_point(aes(colour=(cut2(Age))))
 hist(training$Superplasticizer)
 #-Inf variables.
 
+hist(log(training$Superplasticizer + 1))
+
 
 #4. Load the Alzheimer's disease data using the commands:
 
