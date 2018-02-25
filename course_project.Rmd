@@ -2,11 +2,12 @@
 title: "Hopkins Machine Learning Project Report"
 author: "Andy Hasselwander"
 date: "February 16, 2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 #Data Setup
