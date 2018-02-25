@@ -2,7 +2,7 @@
 title: "Hopkins Machine Learning Project Report"
 author: "Andy Hasselwander"
 date: "February 16, 2018"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -69,8 +69,42 @@ training <- training[,completeVars]
 
 
 
-#Prediction: Decision Trees
-Decision trees does not seem to work well. D is missed entirely. For all models, we us
+
+#Final Prediction: Random Forests
+Random Forest dramatically outperforms both the decision tree and SVM models. For each class, the sensitivity and specificity are >= 98%. The overall accuracy is 99.27%.
+```{r}
+set.seed(66666)
+
+
+if(!exists("rfModel")){
+rfModel <- train(classe ~ ., data=training, method="rf", preProcess="scale")}
+
+
+predictRF <- predict(rfModel, testing)
+require(randomForest)
+plot(rfModel$finalModel)
+```
+
+##Confusion Matrix
+C seems to be the most difficult to predict, wiht the most false positives. E is predicted almost perfectly, both from a sensitivity (.9982) and specificity (.9996) perspective.
+
+```{r}
+
+confusionMatrix(predictRF, testing$classe)
+```
+
+##Predictions on Test Set
+```{r}
+testPredictRF <- predict(rfModel, validation)
+
+#Predictions for the test set
+data.frame(caseNumber = 1:20,predictions = testPredictRF)
+
+```
+
+#Appendix: Some Less Effective Models
+##Prediction: Decision Trees
+Decision trees do not seem to work well. D is missed entirely.
 ```{r}
 require(rpart.plot)
 set.seed(66666)
@@ -84,26 +118,8 @@ confusionMatrix(predictTree, testing$classe)
 
 ```
 
-#Prediction: Random Forests
-Random Forest dramatically outperforms the decision tree model. For each class, the sensitivity and specificity are >= 98%. The overall accuracy is 99.27%.
-```{r}
-set.seed(66666)
-if(!exists("rfModel")){
-rfModel <- train(classe ~ ., data=training, method="rf", preProcess="scale")}
-
-predictRF <- predict(rfModel, testing)
-
-confusionMatrix(predictRF, testing$classe)
-
-testPredictRF <- predict(rfModel, validation)
-
-#Predictions for the test set
-data.frame(caseNumber = 1:20,predictions = testPredictRF)
-
-```
-
-#Prediction: Support Vector Machines
-SVM performs better than decision tree, but not nearly as well as Random Forests.
+##Prediction: Support Vector Machines
+SVM performs better than decision tree, but accuracy still leaves a lot to be desired.
 
 ```{r}
 set.seed(66666)
@@ -116,3 +132,4 @@ confusionMatrix(predictSVM, testing$classe)
 
 
 ```
+
